@@ -1,7 +1,7 @@
 ﻿using System;
 using LaunchpadAPI;
 
-namespace LaunchpadEx
+namespace LaunchpadExample
 {
     class Program
     {
