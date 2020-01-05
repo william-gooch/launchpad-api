@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using LaunchpadAPI;
 
 namespace LaunchpadExample
@@ -20,6 +21,8 @@ namespace LaunchpadExample
                     [(1, 1)] = new LaunchpadColor(34, 0, 45),
                     [(0, 1)] = new LaunchpadColor(0, 127, 127),
                 });
+                Thread.Sleep(1000);
+                lp.SetAllLEDs(LaunchpadColor.RED);
             } catch (NoSuchDeviceException e) {
                 System.Console.WriteLine($"Could not load launchpad: {e.Message}");
             }

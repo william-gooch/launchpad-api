@@ -15,6 +15,11 @@ namespace LaunchpadAPI
             Green = green;
             Blue = blue;
         }
+        
+        public static LaunchpadColor BLACK = new LaunchpadColor(0, 0, 0);
+        public static LaunchpadColor RED = new LaunchpadColor(127, 0, 0);
+        public static LaunchpadColor GREEN = new LaunchpadColor(0, 127, 0);
+        public static LaunchpadColor BLUE = new LaunchpadColor(0, 0, 127);
     }
 
     public abstract class Launchpad
@@ -30,6 +35,8 @@ namespace LaunchpadAPI
         public abstract void SetLED(int x, int y, LaunchpadColor color);
         public abstract void ClearLED(int x, int y);
         public abstract void SetLEDs(IDictionary<(int x, int y), LaunchpadColor> changes);
+        public abstract void SetLEDs(LaunchpadColor[,] leds);
+        public abstract void SetAllLEDs(LaunchpadColor color);
         public abstract void ClearAll();
     }
 }

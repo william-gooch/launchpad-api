@@ -56,23 +56,45 @@ namespace LaunchpadAPI
             outputDevice.Send(msg);
         }
 
-        public override void ClearAll()
-        {
-            var msgData = new byte[6 + 5 * 81];
+        public override void SetLEDs(LaunchpadColor[,] leds) {
+            if(leds.GetLength(0) != 9 || leds.GetLength(1) != 9) {
+                throw new ArgumentException("LEDs matrix is the wrong size, should be 9x9");
+            }
+            var bytes = new byte[6 + 5 * 81];
             Array.Copy(
                 new byte[] { 0x00, 0x20, 0x29, 0x02, 0x0C, 0x03 },
-                msgData, 6);
+                bytes, 6);
             for(int y = 0; y < 9; y++) {
-                for(int x = 0; x < 9; x++) {
-                    msgData[6 + 5*(9*y + x) + 0] = 0x03;
-                    msgData[6 + 5*(9*y + x) + 1] = ledLayout[y,x];
-                    msgData[6 + 5*(9*y + x) + 2] = 0;
-                    msgData[6 + 5*(9*y + x) + 3] = 0;
-                    msgData[6 + 5*(9*y + x) + 4] = 0;
+                for (int x = 0; x < 9; x++) {
+                    Array.Copy(
+                        new byte[] { 0x03, ledLayout[y,x], leds[y,x].Red, leds[y,x].Green, leds[y,x].Blue }, 0,
+                        bytes, 6 + 5 * (9*y + x), 5);
                 }
             }
-            var msg = new SysExMessage(msgData);
+            var msg = new SysExMessage(bytes);
             outputDevice.Send(msg);
+        }
+
+        public override void SetAllLEDs(LaunchpadColor color)
+        {
+            var bytes = new byte[6 + 5 * 81];
+            Array.Copy(
+                new byte[] { 0x00, 0x20, 0x29, 0x02, 0x0C, 0x03 },
+                bytes, 6);
+            for(int y = 0; y < 9; y++) {
+                for(int x = 0; x < 9; x++) {
+                    Array.Copy(
+                        new byte[] { 0x03, ledLayout[y,x], color.Red, color.Green, color.Blue }, 0,
+                        bytes, 6 + 5 * (9*y + x), 5);
+                }
+            }
+            var msg = new SysExMessage(bytes);
+            outputDevice.Send(msg);
+        }
+
+        public override void ClearAll()
+        {
+            SetAllLEDs(LaunchpadColor.BLACK);
         }
     }
 }
