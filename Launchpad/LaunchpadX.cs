@@ -37,13 +37,7 @@ namespace LaunchpadAPI
 
         public override void ClearLED(int x, int y)
         {
-            var msg = new SysExMessage(
-                new byte[] {
-                    0x00, 0x20, 0x29, 0x02, 0x0C, 0x03,
-                    0x03, ledLayout[y,x], 0, 0, 0
-                }
-            );
-            outputDevice.Send(msg);
+            SetLED(x, y, new LaunchpadColor(0, 0, 0));
         }
 
         public override void ClearAll()
