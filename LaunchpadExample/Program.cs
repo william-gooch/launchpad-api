@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LaunchpadAPI;
 
 namespace LaunchpadExample
@@ -13,6 +14,12 @@ namespace LaunchpadExample
             try {
                 Launchpad lp = LaunchpadCreator.CreateFromNames("LPX MIDI ", "LPX MIDI ");
                 lp.ClearAll();
+                lp.SetLEDs(new Dictionary<(int, int), LaunchpadColor> {
+                    [(0, 0)] = new LaunchpadColor(127, 0, 0),
+                    [(1, 0)] = new LaunchpadColor(56, 127, 0),
+                    [(1, 1)] = new LaunchpadColor(34, 0, 45),
+                    [(0, 1)] = new LaunchpadColor(0, 127, 127),
+                });
             } catch (NoSuchDeviceException e) {
                 System.Console.WriteLine($"Could not load launchpad: {e.Message}");
             }

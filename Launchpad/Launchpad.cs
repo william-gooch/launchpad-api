@@ -29,6 +29,7 @@ namespace LaunchpadAPI
 
         public abstract void SetLED(int x, int y, LaunchpadColor color);
         public abstract void ClearLED(int x, int y);
+        public abstract void SetLEDs(IDictionary<(int x, int y), LaunchpadColor> changes);
         public abstract void ClearAll();
     }
 }

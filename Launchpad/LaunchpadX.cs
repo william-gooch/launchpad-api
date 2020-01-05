@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using RtMidi.Core.Devices;
 using RtMidi.Core.Messages;
 
@@ -38,6 +40,20 @@ namespace LaunchpadAPI
         public override void ClearLED(int x, int y)
         {
             SetLED(x, y, new LaunchpadColor(0, 0, 0));
+        }
+
+        public override void SetLEDs(IDictionary<(int x, int y), LaunchpadColor> changes) {
+            var bytes = new byte[6 + changes.Count * 5];
+            Array.Copy(new byte[] { 0x00, 0x20, 0x29, 0x02, 0x0C, 0x03 }, 0, bytes, 0, 6);
+            int changeNumber = 0;
+            foreach(var change in changes) {
+                byte padNumber = ledLayout[change.Key.y, change.Key.x];
+                Array.Copy(new byte[] { 0x03, padNumber, change.Value.Red, change.Value.Blue, change.Value.Green }, 0,
+                    bytes, 6 + changeNumber*5, 5);
+                changeNumber++;
+            }
+            var msg = new SysExMessage(bytes);
+            outputDevice.Send(msg);
         }
 
         public override void ClearAll()
